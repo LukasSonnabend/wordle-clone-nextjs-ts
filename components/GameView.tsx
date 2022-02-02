@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useState } from "react"; // we need this to make JSX compile
 import { CharBoxRow } from "./CharBoxRow";
 import { KeyBoard } from "./KeyBoard";
-import { guessCheck } from "../types";
+import { guessCheck, GuessResponse } from "../types";
 import { addListener } from "process";
 
 export const GameView: FunctionComponent<{
@@ -14,50 +14,95 @@ export const GameView: FunctionComponent<{
   const [guessString, setGuessString] = useState<String>(initialString);
   // inital guesses müssen von difficulty reingegeben werden
   const [currentGuess, setCurrentGuess] = useState<Number>(initialGuess);
+  const [checkArray, setCheckArray] = useState<guessCheck[]>(
+    Array(initialGuess).fill({letterStatus:  []})
+  );
+  const [roundWon, setRoundWon] = useState<Boolean>(false);
   const totalGuesses = initialGuess;
 
-  //testing
-  const checkArr: guessCheck[] = [
-    {letterStatus: [0, 1, 0, 2, 1]},
-    {letterStatus: [0, 1, 0, 2, 1]},
-  ];
+  const postGuess = async (guess: String) => {
+    try {
+        
+    const response =  await fetch("/api/v1/game/guess", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        guess: guess,
+        wordID: 0,
+      })});
+
+      const guessEvaluation = await response.json();
+      return guessEvaluation
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+const enterFunction = async() => {
+  if (guessString.length < initialGuess) {
+    alert("Bitte 5 Buchstaben eingeben")
+    return
+  }
+  
+  const apiResponse: GuessResponse = await postGuess(guessString);
+  console.log(apiResponse);
+  if (!apiResponse.validGuess) {
+    alert("Dieses Wort existiert nicht")
+    return
+  }
+
+  //save guess to guessArray
+  setGuessesArray(
+    guessesArray.map((guess, index) => {
+      if (index === totalGuesses - currentGuess) {
+        return guessString;
+      } else {
+        return guess;
+      }
+    })
+  );
+
+  setCheckArray(
+    checkArray.map((letterStatusObject, index) => {
+      if (index === totalGuesses - currentGuess) {
+        return {letterStatus: apiResponse.evaluation.letterStatus};
+      } else {
+        return letterStatusObject;
+      }
+    })
+  );
+
+  // hier könnte man direkt ein objekt bauen und dieses an das keyboard objekt schicken
+  setRoundWon(apiResponse.wordGuessed)
+  // reset guess
+  setGuessString("");
+  setCurrentGuess(currentGuess - 1);
+}
 
 
-  // hier post auf api irgendwie muss das zu eratende wort gematcht werden
-  const handleClick = (char: String) => {
+
+    // hier post auf api irgendwie muss das zu eratende wort gematcht werden
+  const handleClick = async (char: String) => {
     if (char === "DELET") {
       setGuessString(guessString.slice(0, -1));
     } else if (char === "ENTER") {
-      if (guessString.length < initialGuess) {
-        alert("Bitte 5 Buchstaben eingeben")
-        return
-      }
-      // replace index in array
-      setGuessesArray(
-        guessesArray.map((guess, index) => {
-          if (index === totalGuesses - currentGuess) {
-            return guessString;
-          } else {
-            return guess;
-          }
-        })
-      );
-      // reset guess
-      setGuessString("");
-      setCurrentGuess(currentGuess - 1);
+      await enterFunction();
     } else if (guessString.length < 5) setGuessString(`${guessString}${char}`);
   };
 
   return (
     <>
       <div>
-        {[...Array(totalGuesses)].map((_, i) => {
+        {roundWon && "Gewonnen!"}
+        {[...Array(totalGuesses+1)].map((_, i) => {
           return (
             <CharBoxRow
               key={i}
               guessedRow={i < totalGuesses - currentGuess}
               guess={i == totalGuesses - currentGuess ? guessString : guessesArray[i]}
-              checkArr={checkArr[i] && checkArr[i]}
+              checkArr={checkArray[i] && checkArray[i]}
               boxCount={totalGuesses}
             />
           );

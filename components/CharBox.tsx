@@ -18,7 +18,7 @@ const boxStatusClass = (status: number) => {
 
 export const CharBox = ({ char, status }: CharBoxProps) => (<>
     <div className={`table ${boxStatusClass(status)} h-24 w-24 border-2 border-indigo-500 rounded-lg`}>
-      <p className="text-8xl text-center table-cell align-middle">{char}</p>
+      <p className="text-7xl text-center table-cell align-middle">{char}</p>
     </div>
   </>
 );
