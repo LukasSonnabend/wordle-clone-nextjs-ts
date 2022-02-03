@@ -15,75 +15,73 @@ export const GameView: FunctionComponent<{
   // inital guesses müssen von difficulty reingegeben werden
   const [currentGuess, setCurrentGuess] = useState<Number>(initialGuess);
   const [checkArray, setCheckArray] = useState<guessCheck[]>(
-    Array(initialGuess).fill({letterStatus:  []})
+    Array(initialGuess).fill({ letterStatus: [] })
   );
   const [roundWon, setRoundWon] = useState<Boolean>(false);
   const totalGuesses = initialGuess;
 
   const postGuess = async (guess: String) => {
     try {
-        
-    const response =  await fetch("/api/v1/game/guess", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        guess: guess,
-        wordID: 0,
-      })});
+      const response = await fetch("/api/v1/game/guess", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          guess: guess,
+          wordID: 0,
+        }),
+      });
 
       const guessEvaluation = await response.json();
-      return guessEvaluation
+      return guessEvaluation;
     } catch (error) {
-        console.error(error);
+      console.error(error);
     }
-}
+  };
 
-const enterFunction = async() => {
-  if (guessString.length < initialGuess) {
-    alert("Bitte 5 Buchstaben eingeben")
-    return
-  }
-  
-  const apiResponse: GuessResponse = await postGuess(guessString);
-  console.log(apiResponse);
-  if (!apiResponse.validGuess) {
-    alert("Dieses Wort existiert nicht")
-    return
-  }
+  const enterFunction = async () => {
+    if (guessString.length < initialGuess) {
+      alert("Bitte 5 Buchstaben eingeben");
+      return;
+    }
 
-  //save guess to guessArray
-  setGuessesArray(
-    guessesArray.map((guess, index) => {
-      if (index === totalGuesses - currentGuess) {
-        return guessString;
-      } else {
-        return guess;
-      }
-    })
-  );
+    const apiResponse: GuessResponse = await postGuess(guessString);
+    console.log(apiResponse);
+    if (!apiResponse.validGuess) {
+      alert("Dieses Wort existiert nicht");
+      return;
+    }
 
-  setCheckArray(
-    checkArray.map((letterStatusObject, index) => {
-      if (index === totalGuesses - currentGuess) {
-        return {letterStatus: apiResponse.evaluation.letterStatus};
-      } else {
-        return letterStatusObject;
-      }
-    })
-  );
+    //save guess to guessArray
+    setGuessesArray(
+      guessesArray.map((guess, index) => {
+        if (index === totalGuesses - currentGuess) {
+          return guessString;
+        } else {
+          return guess;
+        }
+      })
+    );
 
-  // hier könnte man direkt ein objekt bauen und dieses an das keyboard objekt schicken
-  setRoundWon(apiResponse.wordGuessed)
-  // reset guess
-  setGuessString("");
-  setCurrentGuess(currentGuess - 1);
-}
+    setCheckArray(
+      checkArray.map((letterStatusObject, index) => {
+        if (index === totalGuesses - currentGuess) {
+          return { letterStatus: apiResponse.evaluation.letterStatus };
+        } else {
+          return letterStatusObject;
+        }
+      })
+    );
 
+    // hier könnte man direkt ein objekt bauen und dieses an das keyboard objekt schicken
+    setRoundWon(apiResponse.wordGuessed);
+    // reset guess
+    setGuessString("");
+    setCurrentGuess(currentGuess - 1);
+  };
 
-
-    // hier post auf api irgendwie muss das zu eratende wort gematcht werden
+  // hier post auf api irgendwie muss das zu eratende wort gematcht werden
   const handleClick = async (char: String) => {
     if (char === "DELET") {
       setGuessString(guessString.slice(0, -1));
@@ -94,23 +92,24 @@ const enterFunction = async() => {
 
   return (
     <>
-      <div>
+      <div className="h-4/6">
         {roundWon && "Gewonnen!"}
-        {[...Array(totalGuesses+1)].map((_, i) => {
+        {[...Array(totalGuesses + 1)].map((_, i) => {
           return (
             <CharBoxRow
               key={i}
               guessedRow={i < totalGuesses - currentGuess}
-              guess={i == totalGuesses - currentGuess ? guessString : guessesArray[i]}
+              guess={
+                i == totalGuesses - currentGuess ? guessString : guessesArray[i]
+              }
               checkArr={checkArray[i] && checkArray[i]}
               boxCount={totalGuesses}
             />
           );
         })}
-
-        <div className="flex flex-wrap justify-center mt-4">
-          <KeyBoard handleClick={handleClick} />
-        </div>
+      </div>
+      <div className="fixed w-screen lg:flex md:w-3/6 bottom-0 h-2/6">
+        <KeyBoard handleClick={handleClick} />
       </div>
     </>
   );

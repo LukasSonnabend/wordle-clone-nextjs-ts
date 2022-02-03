@@ -11,9 +11,9 @@ interface KeyBoardProps{
 //  TODO: 
   //Checked keys müssen unten gesperrt bzw grün hinterlegt werden 
   // Wäre nice wenn der delete button die gleiche breite hätte wie 
-export const KeyBoard = (Props: KeyBoardProps) => <div>
+export const KeyBoard = (Props: KeyBoardProps) => <div className='mt-2 h-full'>
   {/* Row1 */}
-  <div className='flex max-h-12'>
+  <div className='flex justify-end w-full gap-0.5 h-1/4 lg:gap-1'>
     <Key letter="Q" passToGame={Props.handleClick}/>
     <Key letter="W" passToGame={Props.handleClick}/>
     <Key letter="E" passToGame={Props.handleClick}/>
@@ -27,7 +27,7 @@ export const KeyBoard = (Props: KeyBoardProps) => <div>
     <Key letter="Ü" passToGame={Props.handleClick}/>
   </div>
   {/* Row2 */}
-  <div className='flex my-2 max-h-14 mx-4'>
+  <div className='flex justify-end w-full my-2 h-1/4 mx-2 gap-0.5 lg:gap-1 lg:mx-4'>
     <Key letter="A" passToGame={Props.handleClick}/>
     <Key letter="S" passToGame={Props.handleClick}/>
     <Key letter="D" passToGame={Props.handleClick}/>
@@ -41,7 +41,7 @@ export const KeyBoard = (Props: KeyBoardProps) => <div>
     <Key letter="Ä" passToGame={Props.handleClick}/>
   </div>
   {/* Row3 */}
-  <div className='flex max-h-12'>
+  <div className='flex justify-center w-full gap-0.5 lg:gap-1 h-1/4'>
     <Key letter="ENTER" passToGame={Props.handleClick}/>
     <Key letter="Y" passToGame={Props.handleClick}/>
     <Key letter="X" passToGame={Props.handleClick}/>
