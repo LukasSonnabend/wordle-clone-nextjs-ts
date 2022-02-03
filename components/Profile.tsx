@@ -19,6 +19,13 @@ export const Profile = ({setGuessInfo, resetRound, currentRoundEnd}: ProfileProp
 
 
     if (currentRoundEnd){
+      if (localStorage.getItem("profile")) {
+        const profile = JSON.parse(localStorage.getItem("profile"));
+        profile.totalRounds++;
+        localStorage.setItem("profile", JSON.stringify(profile));
+      } else {
+        localStorage.setItem("profile", JSON.stringify({totalRounds: 1, firstDay: new Date().toLocaleDateString()}));
+      }
 
       const timer = setTimeout(() => {
         resetRound();

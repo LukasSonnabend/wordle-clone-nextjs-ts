@@ -32,19 +32,19 @@ export const GameView: FunctionComponent<{
     setCheckArray(Array(totalGuesses).fill({ letterStatus: [] }));
     setRoundWon(false);
     setKeysObject({});
-  }
+  };
 
-  const keyStatusFunc = (guesses: String[], check: guessCheck[]) => { 
-    const temp = {}
-    let currentGuess = initialGuess-totalGuesses;
+  const keyStatusFunc = (guesses: String[], check: guessCheck[]) => {
+    const temp = {};
+    let currentGuess = initialGuess - totalGuesses;
     for (var i = 0; i < guesses[currentGuess].length; i++) {
-      if (!temp.hasOwnProperty(guesses[currentGuess][i].toUpperCase())){
-        temp[guesses[currentGuess][i].toUpperCase()] = check[currentGuess].letterStatus[i];
+      if (!temp.hasOwnProperty(guesses[currentGuess][i].toUpperCase())) {
+        temp[guesses[currentGuess][i].toUpperCase()] =
+          check[currentGuess].letterStatus[i];
       }
     }
     setKeysObject(temp);
-  }
-
+  };
 
   const postGuess = async (guess: String) => {
     try {
@@ -81,34 +81,30 @@ export const GameView: FunctionComponent<{
 
     //save guess to guessArray
     const guessesNew = guessesArray.map((guess, index) => {
-      if (index === (totalGuesses - currentGuess)) {
+      if (index === totalGuesses - currentGuess) {
         return guessString;
       } else {
         return guess;
       }
-    })
+    });
 
     const checkNew = checkArray.map((letterStatusObject, index) => {
-      if (index === (totalGuesses - currentGuess)) {
+      if (index === totalGuesses - currentGuess) {
         return { letterStatus: apiResponse.evaluation.letterStatus };
       } else {
         return letterStatusObject;
       }
-    })
-    
-    
+    });
+
     setGuessesArray(guessesNew);
 
-
     setCheckArray(checkNew);
-
 
     keyStatusFunc(guessesNew, checkNew);
 
     // hier könnte man direkt ein objekt bauen und dieses an das keyboard objekt schicken
     setRoundWon(apiResponse.wordGuessed);
-    if (apiResponse.wordGuessed)
-      confettiFunc()
+    if (apiResponse.wordGuessed) confettiFunc();
     // reset guess
     setGuessString("");
     setCurrentGuess(currentGuess - 1);
@@ -123,20 +119,18 @@ export const GameView: FunctionComponent<{
     } else if (guessString.length < 5) setGuessString(`${guessString}${char}`);
   };
 
-
-
   const confettiFunc = () => {
-    var myCanvas = document.createElement('canvas');
+    var myCanvas = document.createElement("canvas");
     document.body.appendChild(myCanvas);
-    
+
     var myConfetti = confetti.create(myCanvas, {
       resize: true,
-      useWorker: false
+      useWorker: false,
     });
     myConfetti({
       particleCount: 200,
       disableForReducedMotion: true,
-      spread: 300
+      spread: 300,
       // any other options from the global
       // confetti function
     });
@@ -145,31 +139,41 @@ export const GameView: FunctionComponent<{
       myConfetti.reset();
       document.querySelector("canvas")?.remove();
     }, 2900);
-  }
-
+  };
 
   return (
     <>
-      <div className="h-4/6 md:h-3/6">
-        <Profile setGuessInfo={setServerGuessInfo} currentRoundEnd={roundWon} resetRound={resetRound}/>
-        {[...Array(totalGuesses + 1)].map((_, i) => {
-          return (
-            <CharBoxRow
-              key={i}
-              guessedRow={i < totalGuesses - currentGuess}
-              guess={
-                i == totalGuesses - currentGuess ? guessString : guessesArray[i]
-              }
-              checkArr={checkArray[i] && checkArray[i]}
-              boxCount={totalGuesses}
-            />
-          );
-        })}
-      </div>
-      <div className="flex justify-center">
-        <div className="fixed w-screen bottom-0 h-2/6 max-w-sm">
-          <KeyBoard handleClick={handleClick} keyStatus={keysObject}/>
+      {/* <div className="h-4/6 md:h-3/6 flex-grow items-center"> */}
+      <div className="flex justify-center items-center flex-grow mt-2">
+        <Profile
+          setGuessInfo={setServerGuessInfo}
+          currentRoundEnd={roundWon}
+          resetRound={resetRound}
+        />
+        <div>
+          {[...Array(totalGuesses + 1)].map((_, i) => {
+            return (
+              <CharBoxRow
+                key={i}
+                guessedRow={i < totalGuesses - currentGuess}
+                guess={
+                  i == totalGuesses - currentGuess
+                    ? guessString
+                    : guessesArray[i]
+                }
+                checkArr={checkArray[i] && checkArray[i]}
+                boxCount={totalGuesses}
+              />
+            );
+          })}
         </div>
+      </div>
+      {/* <div className="flex justify-center">*/}
+      <div className="keyboard w-screen max-w-sm">
+        {/* <div className="flex-grow-0"> */}
+        <KeyBoard handleClick={handleClick} keyStatus={keysObject} />
+        {/*   </div>
+        </div> */}
       </div>
     </>
   );

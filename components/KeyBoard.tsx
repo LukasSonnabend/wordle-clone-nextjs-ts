@@ -25,10 +25,11 @@ export const KeyBoard = (Props: KeyBoardProps) => <div className='mt-2 h-full'>
     <Key letter="I" status={Props.keyStatus["I"]} passToGame={Props.handleClick}/>
     <Key letter="O" status={Props.keyStatus["O"]} passToGame={Props.handleClick}/>
     <Key letter="P" status={Props.keyStatus["P"]} passToGame={Props.handleClick}/>
-    <Key letter="Ü" status={Props.keyStatus["Ü"]} passToGame={Props.handleClick}/>
+    {/* <Key letter="Ü" status={Props.keyStatus["Ü"]} passToGame={Props.handleClick}/> */}
   </div>
   {/* Row2 */}
-  <div className='flex justify-end w-full my-2 h-1/4 mx-2 gap-0.5 lg:gap-1 lg:mx-4'>
+  <div className='flex justify-end w-full my-2 h-1/4 gap-0.5 lg:gap-1 basis-auto'>
+    <span className='half-key'/>
     <Key letter="A" status={Props.keyStatus["A"]} passToGame={Props.handleClick}/>
     <Key letter="S" status={Props.keyStatus["S"]} passToGame={Props.handleClick}/>
     <Key letter="D" status={Props.keyStatus["D"]} passToGame={Props.handleClick}/>
@@ -38,8 +39,9 @@ export const KeyBoard = (Props: KeyBoardProps) => <div className='mt-2 h-full'>
     <Key letter="J" status={Props.keyStatus["J"]} passToGame={Props.handleClick}/>
     <Key letter="K" status={Props.keyStatus["K"]} passToGame={Props.handleClick}/>
     <Key letter="L" status={Props.keyStatus["L"]} passToGame={Props.handleClick}/>
-    <Key letter="Ö" status={Props.keyStatus["Ö"]} passToGame={Props.handleClick}/>
-    <Key letter="Ä" status={Props.keyStatus["Ä"]} passToGame={Props.handleClick}/>
+    <span className='half-key'/>
+    {/* <Key letter="Ö" status={Props.keyStatus["Ö"]} passToGame={Props.handleClick}/>
+    <Key letter="Ä" status={Props.keyStatus["Ä"]} passToGame={Props.handleClick}/> */}
   </div>
   {/* Row3 */}
   <div className='flex justify-center w-full gap-0.5 lg:gap-1 h-1/4'>
