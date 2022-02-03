@@ -15,9 +15,10 @@ const boxStatusClass = (status: number) => {
   else 
     return "bg-black"
 }
+// add animation
 
 export const CharBox = ({ char, status }: CharBoxProps) => (<>
-    <div className={`table ${boxStatusClass(status)} h-16 w-16 lg:h-18 lg:w-18 border-2 border-indigo-500 rounded-lg`}>
+    <div className={`table ${boxStatusClass(status || -1)} h-16 w-16 lg:h-18 lg:w-18 border-2 border-indigo-500 rounded-lg`}>
       <p className="text-5xl lg:text-6xl text-center table-cell align-middle">{char}</p>
     </div>
   </>

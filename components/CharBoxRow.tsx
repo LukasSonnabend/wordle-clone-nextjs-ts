@@ -5,7 +5,7 @@ import { guessCheck } from "../types";
 
 type CharBoxRowProps = {
   guess: String;
-  checkArr?: guessCheck;
+  checkArr: guessCheck;
   guessedRow?: Boolean;
   boxCount: Number;
 };

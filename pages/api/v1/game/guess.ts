@@ -12,7 +12,7 @@ interface ExtendedNextApiRequest extends NextApiRequest {
 const allWordsObject: Record<string, String[]> = require('../../../../util/wordJson.json'); 
 
 
-const validateGuess = (guessString: String, wordID: number): number[] => {
+const validateGuess = (guessString: String, wordID: number[]): number[] => {
   const alphabet = "abcdefghijklmnopqrstuvwxz"
   const wordToGuess = allWordsObject[alphabet[wordID[0]]][wordID[1]]
 

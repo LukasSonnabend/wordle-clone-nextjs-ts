@@ -9,6 +9,10 @@ interface ExtendedNextApiRequest extends NextApiRequest {
   };
 }
 
+interface ExtendedNextApiResponse extends NextApiResponse {
+  guessWord: number []
+}
+
 const allWordsObject: Record<string, String[]> = require('../../../../util/wordJson.json'); 
 
 const randomWord = (): number[] => {
@@ -20,7 +24,7 @@ const randomWord = (): number[] => {
 
 export default function handler(
   req: ExtendedNextApiRequest,
-  res: NextApiResponse<GuessResponse>
+  res: ExtendedNextApiResponse
 ) {
 
   // get random word from wordList

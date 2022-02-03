@@ -8,19 +8,23 @@ interface ProfileProps {
 
 export const Profile = ({setGuessInfo, resetRound, currentRoundEnd}: ProfileProps) => {
   // check if there is word in localStorage
-  useEffect(async () => {
+  useEffect(() => {
     if (currentRoundEnd) {
       localStorage.removeItem("word");
     }
 
-    if (localStorage.getItem("word"))
-    setGuessInfo(JSON.parse(localStorage.getItem("word")).guessWord);
-    else localStorage.setItem("word", JSON.stringify(await getNewWord()));
+    (async () => {
+      if (localStorage.getItem("word"))
+      setGuessInfo(JSON.parse(localStorage.getItem("word") || "{guessWord: 'namen'}").guessWord);
+      else localStorage.setItem("word", JSON.stringify(await getNewWord()));
+    })()
+
+  
 
 
     if (currentRoundEnd){
       if (localStorage.getItem("profile")) {
-        const profile = JSON.parse(localStorage.getItem("profile"));
+        const profile = JSON.parse(localStorage.getItem("profile") || "{}");
         profile.totalRounds++;
         localStorage.setItem("profile", JSON.stringify(profile));
       } else {

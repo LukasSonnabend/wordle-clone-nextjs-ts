@@ -6,15 +6,15 @@ import { guessCheck, GuessResponse } from "../types";
 import confetti from "canvas-confetti";
 
 export const GameView: FunctionComponent<{
-  initialString?: String;
-  initialGuess?: Number;
+  initialString?: string;
+  initialGuess?: number;
 }> = ({ initialString = "", initialGuess = 5 }) => {
   const [guessesArray, setGuessesArray] = useState<String[]>(
-    Array(initialGuess).fill("")
+    Array<String>(initialGuess).fill("")
   );
-  const [guessString, setGuessString] = useState<String>(initialString);
+  const [guessString, setGuessString] = useState<string>(initialString);
   // inital guesses müssen von difficulty reingegeben werden
-  const [currentGuess, setCurrentGuess] = useState<Number>(initialGuess);
+  const [currentGuess, setCurrentGuess] = useState<number>(initialGuess);
   const [checkArray, setCheckArray] = useState<guessCheck[]>(
     Array(initialGuess).fill({ letterStatus: [] })
   );
@@ -22,7 +22,7 @@ export const GameView: FunctionComponent<{
   const [serverGuessInfo, setServerGuessInfo] = useState<number[]>([]);
   const [keysObject, setKeysObject] = useState<object>({});
 
-  const [roundWon, setRoundWon] = useState<Boolean>(false);
+  const [roundWon, setRoundWon] = useState<boolean>(false);
   const totalGuesses = initialGuess;
 
   const resetRound = () => {
