@@ -32,11 +32,11 @@ const validateGuess = (guessString: String, wordID: number[]): number[] => {
     if (char === word2GuessArray[index]) {
       word2GuessArray[index] = " " // falls richtig geraten wird nicht falsche position danach angezeigt
       counts[char]--;
-      return 2;
+      return 3;
     } else if (word2GuessArray.includes(char)) {
-      return counts[char]-- > 0 ? 1 : 0;
+      return counts[char]-- > 0 ? 2 : 1;
     } else {
-      return 0;
+      return 1;
     }
   })
 }
@@ -62,6 +62,6 @@ export default function handler(
     submittedGuess: userGuess,
     validGuess: isRealWord,
     evaluation: {letterStatus: (isRealWord ? validationArray : [])},
-    wordGuessed: validationArray.reduce((a,b) => a+b) === userGuess.length * 2
+    wordGuessed: validationArray.reduce((a,b) => a+b) === userGuess.length * 3
   })
 }

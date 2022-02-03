@@ -35,12 +35,18 @@ export const GameView: FunctionComponent<{
   };
 
   const keyStatusFunc = (guesses: String[], check: guessCheck[]) => {
-    const temp = {};
-    let currentGuess = initialGuess - totalGuesses;
-    for (var i = 0; i < guesses[currentGuess].length; i++) {
-      if (!temp.hasOwnProperty(guesses[currentGuess][i].toUpperCase())) {
-        temp[guesses[currentGuess][i].toUpperCase()] =
-          check[currentGuess].letterStatus[i];
+    const temp = keysObject;
+    let currentGuessIndex = totalGuesses - currentGuess;
+    console.log(guesses[currentGuessIndex])
+    for (var i = 0; i < guesses[currentGuessIndex].length; i++) {
+      if (!temp.hasOwnProperty(guesses[currentGuessIndex][i].toUpperCase())) {
+        temp[guesses[currentGuessIndex][i].toUpperCase()] =
+          check[currentGuessIndex].letterStatus[i];
+      } else {
+        if (temp[guesses[currentGuessIndex][i].toUpperCase()] < check[currentGuessIndex].letterStatus[i]) {
+          temp[guesses[currentGuessIndex][i].toUpperCase()] =
+            check[currentGuessIndex].letterStatus[i];
+        }
       }
     }
     setKeysObject(temp);
