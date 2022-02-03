@@ -17,7 +17,7 @@ export const CharBoxRow: FunctionComponent<CharBoxRowProps> = ({
   boxCount,
 }) => (
   <>
-    <div className="flex flex-wrap justify-center gap-1 mb-1">
+    <div className="flex flex-nowrap justify-center gap-1 mb-1">
       {[...Array(boxCount)].map((_, i: number) => {
         return (
           <CharBox key={i}

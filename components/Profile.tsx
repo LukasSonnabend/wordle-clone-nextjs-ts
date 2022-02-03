@@ -1,0 +1,45 @@
+import React, { FunctionComponent, useState, useEffect } from "react";
+
+interface ProfileProps {
+  setGuessInfo: (info: number[]) => void;
+  resetRound: () => void;
+  currentRoundEnd: boolean;
+}
+
+export const Profile = ({setGuessInfo, resetRound, currentRoundEnd}: ProfileProps) => {
+  // check if there is word in localStorage
+  useEffect(async () => {
+    if (currentRoundEnd) {
+      localStorage.removeItem("word");
+    }
+
+    if (localStorage.getItem("word"))
+    setGuessInfo(JSON.parse(localStorage.getItem("word")).guessWord);
+    else localStorage.setItem("word", JSON.stringify(await getNewWord()));
+
+
+    if (currentRoundEnd){
+
+      const timer = setTimeout(() => {
+        resetRound();
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [currentRoundEnd]);
+
+  const getNewWord = async () => {
+    try {
+      const response = await fetch("/api/v1/game/word", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const word2Guess = await response.json();
+      return word2Guess;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  return null;
+};

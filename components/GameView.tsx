@@ -1,8 +1,9 @@
 import React, { FunctionComponent, useState } from "react"; // we need this to make JSX compile
 import { CharBoxRow } from "./CharBoxRow";
+import { Profile } from "./Profile";
 import { KeyBoard } from "./KeyBoard";
 import { guessCheck, GuessResponse } from "../types";
-import { addListener } from "process";
+import confetti from "canvas-confetti";
 
 export const GameView: FunctionComponent<{
   initialString?: String;
@@ -17,8 +18,33 @@ export const GameView: FunctionComponent<{
   const [checkArray, setCheckArray] = useState<guessCheck[]>(
     Array(initialGuess).fill({ letterStatus: [] })
   );
+
+  const [serverGuessInfo, setServerGuessInfo] = useState<number[]>([]);
+  const [keysObject, setKeysObject] = useState<object>({});
+
   const [roundWon, setRoundWon] = useState<Boolean>(false);
   const totalGuesses = initialGuess;
+
+  const resetRound = () => {
+    setGuessString("");
+    setGuessesArray(Array(totalGuesses).fill(""));
+    setCurrentGuess(totalGuesses);
+    setCheckArray(Array(totalGuesses).fill({ letterStatus: [] }));
+    setRoundWon(false);
+    setKeysObject({});
+  }
+
+  const keyStatusFunc = (guesses: String[], check: guessCheck[]) => { 
+    const temp = {}
+    let currentGuess = initialGuess-totalGuesses;
+    for (var i = 0; i < guesses[currentGuess].length; i++) {
+      if (!temp.hasOwnProperty(guesses[currentGuess][i].toUpperCase())){
+        temp[guesses[currentGuess][i].toUpperCase()] = check[currentGuess].letterStatus[i];
+      }
+    }
+    setKeysObject(temp);
+  }
+
 
   const postGuess = async (guess: String) => {
     try {
@@ -29,7 +55,7 @@ export const GameView: FunctionComponent<{
         },
         body: JSON.stringify({
           guess: guess,
-          wordID: 0,
+          wordID: serverGuessInfo,
         }),
       });
 
@@ -54,28 +80,35 @@ export const GameView: FunctionComponent<{
     }
 
     //save guess to guessArray
-    setGuessesArray(
-      guessesArray.map((guess, index) => {
-        if (index === totalGuesses - currentGuess) {
-          return guessString;
-        } else {
-          return guess;
-        }
-      })
-    );
+    const guessesNew = guessesArray.map((guess, index) => {
+      if (index === (totalGuesses - currentGuess)) {
+        return guessString;
+      } else {
+        return guess;
+      }
+    })
 
-    setCheckArray(
-      checkArray.map((letterStatusObject, index) => {
-        if (index === totalGuesses - currentGuess) {
-          return { letterStatus: apiResponse.evaluation.letterStatus };
-        } else {
-          return letterStatusObject;
-        }
-      })
-    );
+    const checkNew = checkArray.map((letterStatusObject, index) => {
+      if (index === (totalGuesses - currentGuess)) {
+        return { letterStatus: apiResponse.evaluation.letterStatus };
+      } else {
+        return letterStatusObject;
+      }
+    })
+    
+    
+    setGuessesArray(guessesNew);
+
+
+    setCheckArray(checkNew);
+
+
+    keyStatusFunc(guessesNew, checkNew);
 
     // hier könnte man direkt ein objekt bauen und dieses an das keyboard objekt schicken
     setRoundWon(apiResponse.wordGuessed);
+    if (apiResponse.wordGuessed)
+      confettiFunc()
     // reset guess
     setGuessString("");
     setCurrentGuess(currentGuess - 1);
@@ -90,10 +123,35 @@ export const GameView: FunctionComponent<{
     } else if (guessString.length < 5) setGuessString(`${guessString}${char}`);
   };
 
+
+
+  const confettiFunc = () => {
+    var myCanvas = document.createElement('canvas');
+    document.body.appendChild(myCanvas);
+    
+    var myConfetti = confetti.create(myCanvas, {
+      resize: true,
+      useWorker: false
+    });
+    myConfetti({
+      particleCount: 200,
+      disableForReducedMotion: true,
+      spread: 300
+      // any other options from the global
+      // confetti function
+    });
+
+    setTimeout(() => {
+      myConfetti.reset();
+      document.querySelector("canvas")?.remove();
+    }, 2900);
+  }
+
+
   return (
     <>
-      <div className="h-4/6">
-        {roundWon && "Gewonnen!"}
+      <div className="h-4/6 md:h-3/6">
+        <Profile setGuessInfo={setServerGuessInfo} currentRoundEnd={roundWon} resetRound={resetRound}/>
         {[...Array(totalGuesses + 1)].map((_, i) => {
           return (
             <CharBoxRow
@@ -108,8 +166,10 @@ export const GameView: FunctionComponent<{
           );
         })}
       </div>
-      <div className="fixed w-screen lg:flex md:w-3/6 bottom-0 h-2/6">
-        <KeyBoard handleClick={handleClick} />
+      <div className="flex justify-center">
+        <div className="fixed w-screen bottom-0 h-2/6 max-w-sm">
+          <KeyBoard handleClick={handleClick} keyStatus={keysObject}/>
+        </div>
       </div>
     </>
   );

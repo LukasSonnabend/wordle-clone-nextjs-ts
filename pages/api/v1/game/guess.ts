@@ -1,26 +1,40 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { guessCheck } from '../../../../types'
+import { guessCheck, GuessResponse } from '../../../../types'
 
 interface ExtendedNextApiRequest extends NextApiRequest {
   body: {
     guess: string,
-    wordID: number,
+    wordID: number[],
   };
 }
 
-const allWordsObject: Record<string, String[]> = { a: ["abtei", "abgas"] }
-const wordList = ["abtei"]
+const allWordsObject: Record<string, String[]> = require('../../../../util/wordJson.json'); 
 
 
 const validateGuess = (guessString: String, wordID: number): number[] => {
-  const wordToGuess = wordList[wordID].split("")
+  const alphabet = "abcdefghijklmnopqrstuvwxz"
+  const wordToGuess = allWordsObject[alphabet[wordID[0]]][wordID[1]]
+
+  let word2GuessArray = wordToGuess.split("")
+
+  const counts = {};
+
+  //TODO: disable counts for hard mode
+  for (const char of word2GuessArray) {
+    counts[char] = counts[char] ? counts[char] + 1 : 1;
+  }
+
+  
+  console.log(wordToGuess)
+  console.log(counts)
   return guessString.split('').map((char, index) => {
-    if (char === wordToGuess[index]) {
-      wordToGuess[index] = " " // falls richtig geraten wird nicht falsche position danach angezeigt
+    if (char === word2GuessArray[index]) {
+      word2GuessArray[index] = " " // falls richtig geraten wird nicht falsche position danach angezeigt
+      counts[char]--;
       return 2;
-    } else if (wordToGuess.includes(char)) {
-      return 1
+    } else if (word2GuessArray.includes(char)) {
+      return counts[char]-- > 0 ? 1 : 0;
     } else {
       return 0;
     }
