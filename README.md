@@ -2,8 +2,11 @@
 
 ## Status: Early WIP
 
-
+## Util has script for turning a file with a list of words ( one per line ) into a JSON file 
 ## TODO
 - [ ] Persist Round in Progress
 - [ ] Add animation to CharBox when validating
 - [ ] End Round when guesses are empty
+- [ ] Keys wieder sperren
+- [ ] Testing
+  - [ ] https://seanconnolly.dev/unit-testing-nextjs-api-routes

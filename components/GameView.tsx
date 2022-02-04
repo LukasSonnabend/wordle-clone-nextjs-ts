@@ -80,8 +80,12 @@ export const GameView: FunctionComponent<{
       return;
     }
 
-    const apiResponse: GuessResponse = await postGuess(guessString);
+    let apiResponse: GuessResponse = await postGuess(guessString);
     console.log(apiResponse);
+    
+    while(!apiResponse.hasOwnProperty("validGuess"))
+      apiResponse = await postGuess(guessString);
+
     if (!apiResponse.validGuess) {
       alert("Dieses Wort existiert nicht");
       return;
