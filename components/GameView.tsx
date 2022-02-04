@@ -10,13 +10,13 @@ export const GameView: FunctionComponent<{
   initialGuess?: number;
 }> = ({ initialString = "", initialGuess = 5 }) => {
   const [guessesArray, setGuessesArray] = useState<String[]>(
-    Array<String>(initialGuess).fill("")
+    Array<String>(initialGuess+1).fill("")
   );
   const [guessString, setGuessString] = useState<string>(initialString);
   // inital guesses müssen von difficulty reingegeben werden
   const [currentGuess, setCurrentGuess] = useState<number>(initialGuess);
   const [checkArray, setCheckArray] = useState<guessCheck[]>(
-    Array(initialGuess).fill({ letterStatus: [] })
+    Array(initialGuess+1).fill({ letterStatus: [] })
   );
 
   const [serverGuessInfo, setServerGuessInfo] = useState<number[]>([]);
@@ -37,7 +37,9 @@ export const GameView: FunctionComponent<{
   const keyStatusFunc = (guesses: String[], check: guessCheck[]) => {
     const temp = keysObject;
     let currentGuessIndex = totalGuesses - currentGuess;
+    console.log(currentGuessIndex)
     console.log(guesses[currentGuessIndex])
+    console.log(guesses)
     for (var i = 0; i < guesses[currentGuessIndex].length; i++) {
       if (!temp.hasOwnProperty(guesses[currentGuessIndex][i].toUpperCase())) {
         temp[guesses[currentGuessIndex][i].toUpperCase()] =
@@ -131,14 +133,17 @@ export const GameView: FunctionComponent<{
 
     var myConfetti = confetti.create(myCanvas, {
       resize: true,
-      useWorker: false,
+      useWorker: true,
     });
     myConfetti({
-      particleCount: 200,
+      particleCount: 300,
+      angle: 270,
       disableForReducedMotion: true,
-      spread: 300,
-      // any other options from the global
-      // confetti function
+      spread: 180,
+      startVelocity: 50,
+      origin: {
+        y: -0.5,
+      } 
     });
 
     setTimeout(() => {
@@ -149,11 +154,11 @@ export const GameView: FunctionComponent<{
 
   return (
     <>
-      {/* <div className="h-4/6 md:h-3/6 flex-grow items-center"> */}
       <div className="flex justify-center items-center flex-grow mt-2">
         <Profile
           setGuessInfo={setServerGuessInfo}
           currentRoundEnd={roundWon}
+          // currentGuess={currentGuess}
           resetRound={resetRound}
         />
         <div>
@@ -174,12 +179,9 @@ export const GameView: FunctionComponent<{
           })}
         </div>
       </div>
-      {/* <div className="flex justify-center">*/}
       <div className="keyboard w-screen max-w-sm">
-        {/* <div className="flex-grow-0"> */}
         <KeyBoard handleClick={handleClick} keyStatus={keysObject} />
-        {/*   </div>
-        </div> */}
+
       </div>
     </>
   );

@@ -6,4 +6,4 @@
 ## TODO
 - [ ] Persist Round in Progress
 - [ ] Add animation to CharBox when validating
-
+- [ ] End Round when guesses are empty
