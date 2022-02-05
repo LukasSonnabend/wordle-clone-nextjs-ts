@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { guessCheck, GuessResponse } from '../../../../types'
+import { GuessResponse } from '../../../../types'
 
 interface ExtendedNextApiRequest extends NextApiRequest {
   body: {
@@ -27,7 +27,7 @@ const validateGuess = (guessString: String, wordID: number[]): number[] => {
 
   
   console.log(wordToGuess)
-  console.log(counts)
+  // console.log(counts)
   return guessString.split('').map((char, index) => {
     if (char === word2GuessArray[index]) {
       word2GuessArray[index] = " " // falls richtig geraten wird nicht falsche position danach angezeigt
@@ -41,13 +41,12 @@ const validateGuess = (guessString: String, wordID: number[]): number[] => {
   })
 }
 
-export default function handler(
+export default function handleGuess(
   req: ExtendedNextApiRequest,
   res: NextApiResponse<GuessResponse>
 ) {
-
   const userGuess = req.body.guess.toLowerCase()
-  
+
   let isRealWord
   try {
     isRealWord = allWordsObject[userGuess[0]].includes(userGuess)  
