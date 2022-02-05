@@ -28,6 +28,10 @@ const validateGuess = (guessString: String, wordID: number[]): number[] => {
   
   console.log(wordToGuess)
   // console.log(counts)
+
+// split both words and subtract ascii values after check
+// for matches e.g. erstes if is if ""
+
   return guessString.split('').map((char, index) => {
     if (char === word2GuessArray[index]) {
       word2GuessArray[index] = " " // falls richtig geraten wird nicht falsche position danach angezeigt
