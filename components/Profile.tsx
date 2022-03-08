@@ -19,9 +19,6 @@ export const Profile = ({setGuessInfo, resetRound, currentRoundEnd}: ProfileProp
       else localStorage.setItem("word", JSON.stringify(await getNewWord()));
     })()
 
-  
-
-
     if (currentRoundEnd){
       if (localStorage.getItem("profile")) {
         const profile = JSON.parse(localStorage.getItem("profile") || "{}");

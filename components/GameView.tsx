@@ -1,16 +1,20 @@
-import React, { FunctionComponent, useState } from "react"; // we need this to make JSX compile
+import React, { FunctionComponent, useState, useEffect } from "react"; // we need this to make JSX compile
 import { CharBoxRow } from "./CharBoxRow";
 import { Profile } from "./Profile";
 import { KeyBoard } from "./KeyBoard";
-import { guessCheck, GuessResponse } from "../types";
+import { guessCheck, GuessResponse, round } from "../types";
 import confetti from "canvas-confetti";
+import { loadRound, persistRound } from "../functions/gameaux";
 
 export const GameView: FunctionComponent<{
   initialString?: string;
   initialGuess?: number;
 }> = ({ initialString = "", initialGuess = 5 }) => {
-  const [guessesArray, setGuessesArray] = useState<String[]>(
-    Array<String>(initialGuess+1).fill("")
+  // ---------------------- State
+  // ---------------------- State
+  // ---------------------- State
+  const [guessesArray, setGuessesArray] = useState<string[]>(
+    Array<string>(initialGuess+1).fill("")
   );
   const [guessString, setGuessString] = useState<string>(initialString);
   // inital guesses müssen von difficulty reingegeben werden
@@ -18,12 +22,32 @@ export const GameView: FunctionComponent<{
   const [checkArray, setCheckArray] = useState<guessCheck[]>(
     Array(initialGuess+1).fill({ letterStatus: [] })
   );
-
   const [serverGuessInfo, setServerGuessInfo] = useState<number[]>([]);
   const [keysObject, setKeysObject] = useState<object>({});
-
   const [roundWon, setRoundWon] = useState<boolean>(false);
+  // ----------------------
+  // ----------------------
+  // ----------------------
+  
   const totalGuesses = initialGuess;
+  
+  useEffect(() => {
+    // persistRound(guessesArray, checkArray, currentGuess, keysObject)
+    let loadedRound: round = loadRound() 
+    if (loadedRound) {
+        setGuessesArray(loadedRound.guesses)
+        setCheckArray(loadedRound.checks)
+        setCurrentGuess(loadedRound.currentGuess)
+        setKeysObject(loadedRound.keysObject)
+    }  
+  
+  
+  }, []);
+
+  useEffect(() => {
+    persistRound(guessesArray, checkArray, currentGuess, keysObject)    
+  }, [guessesArray, checkArray, currentGuess, keysObject])
+
 
   const resetRound = () => {
     setGuessString("");
@@ -34,12 +58,9 @@ export const GameView: FunctionComponent<{
     setKeysObject({});
   };
 
-  const keyStatusFunc = (guesses: String[], check: guessCheck[]) => {
+  const keyStatusFunc = (guesses: string[], check: guessCheck[]) => {
     const temp = keysObject;
     let currentGuessIndex = totalGuesses - currentGuess;
-    console.log(currentGuessIndex)
-    console.log(guesses[currentGuessIndex])
-    console.log(guesses)
     for (var i = 0; i < guesses[currentGuessIndex].length; i++) {
       if (!temp.hasOwnProperty(guesses[currentGuessIndex][i].toUpperCase())) {
         temp[guesses[currentGuessIndex][i].toUpperCase()] =
@@ -128,7 +149,7 @@ export const GameView: FunctionComponent<{
       setGuessString(guessString.slice(0, -1));
     } else if (char === "ENTER") {
       await enterFunction();
-    } else if (guessString.length < 5) setGuessString(`${guessString}${char}`);
+    } else if (guessString.length < 5) setGuessString(`${guessString}${char}`);  
   };
 
   const confettiFunc = () => {

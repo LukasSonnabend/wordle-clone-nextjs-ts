@@ -9,15 +9,15 @@ interface ExtendedNextApiRequest extends NextApiRequest {
   };
 }
 
-const allWordsObject: Record<string, String[]> = require('../../../../util/wordJson.json'); 
+const allWordsObject: Record<string, String[]> = require('../../../../util/wordJson.json');
 
 
-const validateGuess = (guessString: String, wordID: number[]): number[] => {
+const validateGuess = (guessString: string, wordID: number[]): number[] => {
   const alphabet = "abcdefghijklmnopqrstuvwxz"
   const wordToGuess = allWordsObject[alphabet[wordID[0]]][wordID[1]]
 
   let word2GuessArray = wordToGuess.split("")
-
+  let guessStringArray = guessString.split("")
   const counts = {};
 
   //TODO: disable counts for hard mode
@@ -25,6 +25,7 @@ const validateGuess = (guessString: String, wordID: number[]): number[] => {
     counts[char] = counts[char] ? counts[char] + 1 : 1;
   }
 
+<<<<<<< HEAD
   
   console.log(wordToGuess)
   // console.log(counts)
@@ -41,8 +42,30 @@ const validateGuess = (guessString: String, wordID: number[]): number[] => {
       return counts[char]-- > 0 ? 2 : 1;
     } else {
       return 1;
+=======
+  let validationArray = Array(guessString.length).fill(1)
+
+   // first correct guesses
+   for (let i = 0; i < guessString.length; i++) {
+    if (guessString[i] === word2GuessArray[i]) {
+      validationArray[i] = 3
+      word2GuessArray[i] = " "
+>>>>>>> 50e0d21 (Added persistant game state + validation refac)
     }
-  })
+   }
+
+   console.log(guessStringArray)
+   for (let i = 0; i < guessStringArray.length; i++) {
+      // guessArrray          Word2Guess
+      // namen          ->     pfand
+      console.log(counts)
+      if (guessStringArray[i] !== " " && word2GuessArray.includes(guessStringArray[i]) ){
+        validationArray[i] = counts[guessStringArray[i]]-- > 0 ? 2 : 1;
+        word2GuessArray[i] = " "
+      }
+   }
+
+  return validationArray;
 }
 
 export default function handleGuess(
@@ -53,14 +76,14 @@ export default function handleGuess(
 
   let isRealWord
   try {
-    isRealWord = allWordsObject[userGuess[0]].includes(userGuess)  
+    isRealWord = allWordsObject[userGuess[0]].includes(userGuess)
   } catch (error) {
     isRealWord = false
   }
-  
+
 
   const validationArray = validateGuess(userGuess, req.body.wordID)
-  
+
   res.status(200).json({
     submittedGuess: userGuess,
     validGuess: isRealWord,

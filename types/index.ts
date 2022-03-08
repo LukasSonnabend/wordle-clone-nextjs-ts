@@ -8,3 +8,10 @@ export type GuessResponse = {
   evaluation: guessCheck
   wordGuessed: boolean,
 }
+
+export type round = {
+  guesses: string[],
+  checks: guessCheck[],
+  currentGuess: number,
+  keysObject: object,
+}

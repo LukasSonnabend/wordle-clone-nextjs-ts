@@ -7,6 +7,4 @@
 - [ ] Persist Round in Progress
 - [ ] Add animation to CharBox when validating
 - [ ] End Round when guesses are empty
-- [ ] Keys wieder sperren
-- [ ] Testing
-  - [ ] https://seanconnolly.dev/unit-testing-nextjs-api-routes
+- [ ] Fix // NAMEN -> GAREN Error (vlt. was mit find index in word)
