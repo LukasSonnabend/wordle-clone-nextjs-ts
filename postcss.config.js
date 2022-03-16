@@ -3,4 +3,7 @@ module.exports = {
     tailwindcss: {},
     autoprefixer: {},
   },
+engines: {
+    node: "16.x"
+  }
 }
