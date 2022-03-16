@@ -23,26 +23,7 @@ const validateGuess = (guessString: string, wordID: number[]): number[] => {
   //TODO: disable counts for hard mode
   for (const char of word2GuessArray) {
     counts[char] = counts[char] ? counts[char] + 1 : 1;
-  }
-
-<<<<<<< HEAD
   
-  console.log(wordToGuess)
-  // console.log(counts)
-
-// split both words and subtract ascii values after check
-// for matches e.g. erstes if is if ""
-
-  return guessString.split('').map((char, index) => {
-    if (char === word2GuessArray[index]) {
-      word2GuessArray[index] = " " // falls richtig geraten wird nicht falsche position danach angezeigt
-      counts[char]--;
-      return 3;
-    } else if (word2GuessArray.includes(char)) {
-      return counts[char]-- > 0 ? 2 : 1;
-    } else {
-      return 1;
-=======
   let validationArray = Array(guessString.length).fill(1)
 
    // first correct guesses
@@ -50,8 +31,7 @@ const validateGuess = (guessString: string, wordID: number[]): number[] => {
     if (guessString[i] === word2GuessArray[i]) {
       validationArray[i] = 3
       word2GuessArray[i] = " "
->>>>>>> 50e0d21 (Added persistant game state + validation refac)
-    }
+   }
    }
 
    console.log(guessStringArray)
