@@ -28,24 +28,24 @@ export const GameView: FunctionComponent<{
   // ----------------------
   // ----------------------
   // ----------------------
-  
+
   const totalGuesses = initialGuess;
-  
+
   useEffect(() => {
     // persistRound(guessesArray, checkArray, currentGuess, keysObject)
-    let loadedRound: round = loadRound() 
+    let loadedRound: round = loadRound()
     if (loadedRound) {
         setGuessesArray(loadedRound.guesses)
         setCheckArray(loadedRound.checks)
         setCurrentGuess(loadedRound.currentGuess)
         setKeysObject(loadedRound.keysObject)
-    }  
-  
-  
+    }
+
+
   }, []);
 
   useEffect(() => {
-    persistRound(guessesArray, checkArray, currentGuess, keysObject)    
+    persistRound(guessesArray, checkArray, currentGuess, keysObject)
   }, [guessesArray, checkArray, currentGuess, keysObject])
 
 
@@ -84,7 +84,7 @@ export const GameView: FunctionComponent<{
         },
         body: JSON.stringify({
           guess: guess,
-          wordID: serverGuessInfo,
+          wordID: serverGuessInfo.length === 0 ? JSON.parse(await localStorage.getItem("word")).guessWord : serverGuessInfo,
         }),
       });
 
@@ -103,8 +103,8 @@ export const GameView: FunctionComponent<{
 
     let apiResponse: GuessResponse = await postGuess(guessString);
     console.log(apiResponse);
-    
-    while(!apiResponse.hasOwnProperty("validGuess"))
+
+    while(!apiResponse || !apiResponse.hasOwnProperty("validGuess"))
       apiResponse = await postGuess(guessString);
 
     if (!apiResponse.validGuess) {
@@ -149,7 +149,7 @@ export const GameView: FunctionComponent<{
       setGuessString(guessString.slice(0, -1));
     } else if (char === "ENTER") {
       await enterFunction();
-    } else if (guessString.length < 5) setGuessString(`${guessString}${char}`);  
+    } else if (guessString.length < 5) setGuessString(`${guessString}${char}`);
   };
 
   const confettiFunc = () => {
@@ -168,7 +168,7 @@ export const GameView: FunctionComponent<{
       startVelocity: 50,
       origin: {
         y: -0.5,
-      } 
+      }
     });
 
     setTimeout(() => {

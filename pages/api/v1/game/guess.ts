@@ -11,41 +11,31 @@ interface ExtendedNextApiRequest extends NextApiRequest {
 
 const allWordsObject: Record<string, String[]> = require('../../../../util/wordJson.json');
 
-
 const validateGuess = (guessString: string, wordID: number[]): number[] => {
   const alphabet = "abcdefghijklmnopqrstuvwxz"
   const wordToGuess = allWordsObject[alphabet[wordID[0]]][wordID[1]]
+  console.log(wordToGuess)
+  // first match letters in correct position
+  let word2GuessArray: string[] = wordToGuess.split("")
+  let guessStringArray: string[] = guessString.split("")
+  let validationArray: number[] = Array(guessString.length).fill(1)
 
-  let word2GuessArray = wordToGuess.split("")
-  let guessStringArray = guessString.split("")
-  const counts = {};
-
-  //TODO: disable counts for hard mode
-  for (const char of word2GuessArray) {
-    counts[char] = counts[char] ? counts[char] + 1 : 1;
-  
-  let validationArray = Array(guessString.length).fill(1)
-
-   // first correct guesses
-   for (let i = 0; i < guessString.length; i++) {
-    if (guessString[i] === word2GuessArray[i]) {
+  for (let i = 0; i < guessStringArray.length; i++) {
+    if (guessStringArray[i] === word2GuessArray[i]) {
       validationArray[i] = 3
       word2GuessArray[i] = " "
-   }
-   }
+    }
+  }
 
-   console.log(guessStringArray)
-   for (let i = 0; i < guessStringArray.length; i++) {
-      // guessArrray          Word2Guess
-      // namen          ->     pfand
-      console.log(counts)
-      if (guessStringArray[i] !== " " && word2GuessArray.includes(guessStringArray[i]) ){
-        validationArray[i] = counts[guessStringArray[i]]-- > 0 ? 2 : 1;
-        word2GuessArray[i] = " "
-      }
-   }
+  // then match letters in wrong position correct letters sind spaces
+  for (let i = 0; i < guessStringArray.length; i++) {
+    if (guessStringArray[i] !== " " && word2GuessArray.includes(guessStringArray[i]) ){
+      validationArray[i] = 2;
+      word2GuessArray[word2GuessArray.indexOf(guessStringArray[i])] = " "
+    }
+  }
 
-  return validationArray;
+  return validationArray
 }
 
 export default function handleGuess(

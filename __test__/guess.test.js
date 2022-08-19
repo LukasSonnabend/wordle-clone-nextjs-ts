@@ -29,7 +29,7 @@ describe('/api/v1/game/guess Tests', () => {
     );
   });
 
-  test('returns evaluation of guess', async () => {
+  test('returns evaluation of guess correct-answer', async () => {
     const { req, res } = createMocks({
       method: 'POST',
       headers: {
