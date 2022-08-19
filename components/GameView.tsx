@@ -84,7 +84,7 @@ export const GameView: FunctionComponent<{
         },
         body: JSON.stringify({
           guess: guess,
-          wordID: serverGuessInfo.length === 0 ? JSON.parse(await localStorage.getItem("word")).guessWord : serverGuessInfo,
+          wordID: serverGuessInfo,
         }),
       });
 

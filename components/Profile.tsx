@@ -16,7 +16,11 @@ export const Profile = ({setGuessInfo, resetRound, currentRoundEnd}: ProfileProp
     (async () => {
       if (localStorage.getItem("word"))
       setGuessInfo(JSON.parse(localStorage.getItem("word") || "{guessWord: 'namen'}").guessWord);
-      else localStorage.setItem("word", JSON.stringify(await getNewWord()));
+      else {
+        localStorage.setItem("word", JSON.stringify(await getNewWord()));
+        setGuessInfo(JSON.parse(localStorage.getItem("word") || "{guessWord: 'namen'}").guessWord);
+      }
+
     })()
 
     if (currentRoundEnd){
