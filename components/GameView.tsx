@@ -5,6 +5,9 @@ import { KeyBoard } from "./KeyBoard";
 import { guessCheck, GuessResponse, round } from "../types";
 import confetti from "canvas-confetti";
 import { loadRound, persistRound } from "../functions/gameaux";
+import ExplainModal from "./ExplainModal";
+import { InformationCircleIcon } from '@heroicons/react/outline'
+
 
 export const GameView: FunctionComponent<{
   initialString?: string;
@@ -25,6 +28,7 @@ export const GameView: FunctionComponent<{
   const [serverGuessInfo, setServerGuessInfo] = useState<number[]>([]);
   const [keysObject, setKeysObject] = useState<object>({});
   const [roundWon, setRoundWon] = useState<boolean>(false);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
   // ----------------------
   // ----------------------
   // ----------------------
@@ -39,6 +43,8 @@ export const GameView: FunctionComponent<{
         setCheckArray(loadedRound.checks)
         setCurrentGuess(loadedRound.currentGuess)
         setKeysObject(loadedRound.keysObject)
+    } else {
+      setModalOpen(true)
     }
 
 
@@ -179,6 +185,16 @@ export const GameView: FunctionComponent<{
 
   return (
     <>
+      <span className="w-full text-right mt-2 pr-2">
+      <button
+      type="button"
+      className="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+      >
+      <span className="sr-only">Hilfe</span>
+      <InformationCircleIcon className="h-6 w-6" aria-hidden="true" onClick={() => setModalOpen(true)}/>
+      </button>
+      </span>
+      { modalOpen && <ExplainModal showModal={(val) => setModalOpen(val)}/>}
       <div className="flex justify-center items-center flex-grow mt-2">
         <Profile
           setGuessInfo={setServerGuessInfo}
