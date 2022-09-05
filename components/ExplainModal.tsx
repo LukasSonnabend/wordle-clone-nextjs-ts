@@ -32,7 +32,7 @@ const ExplainModal: FunctionComponent<ModalProps> = ({showModal} : ModalProps) =
   return (
     <div className="absolute h-full">
     <div className="absolute h-screen w-full bg-black opacity-60"></div>
-    <div id="modal" className="max-h-screen overflow-scroll relative rounded bg-slate-600 mt-4 mx-auto p-4 w-11/12 sm:w-8/12">
+    <div id="modal" className="max-h-screen overflow-y-scroll relative rounded bg-slate-600 mt-4 mx-auto p-4 w-11/12 sm:w-8/12">
       <XCircleIcon className="hover:text-black absolute right-0 top-0 m-2 w-8 h-8" onClick={() => showModal(false)}/>
       <h1 className="text-lg font-bold">Wie funktioniert Wordle?</h1>
       <p className="my-1">Errate das versteckte Wort in 6 Versuchen.</p>

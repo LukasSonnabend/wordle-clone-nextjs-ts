@@ -24,6 +24,7 @@ export const Profile = ({setGuessInfo, resetRound, currentRoundEnd}: ProfileProp
     })()
 
     if (currentRoundEnd){
+      console.log("round end")
       if (localStorage.getItem("profile")) {
         const profile = JSON.parse(localStorage.getItem("profile") || "{}");
         profile.totalRounds++;

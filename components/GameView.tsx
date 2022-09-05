@@ -7,17 +7,18 @@ import confetti from "canvas-confetti";
 import { loadRound, persistRound } from "../functions/gameaux";
 import ExplainModal from "./ExplainModal";
 import { InformationCircleIcon } from '@heroicons/react/outline'
+import { arrayBuffer } from "stream/consumers";
 
 
 export const GameView: FunctionComponent<{
   initialString?: string;
   initialGuess?: number;
-}> = ({ initialString = "", initialGuess = 5 }) => {
+}> = ({ initialString = "", initialGuess = 6}) => {
   // ---------------------- State
   // ---------------------- State
   // ---------------------- State
   const [guessesArray, setGuessesArray] = useState<string[]>(
-    Array<string>(initialGuess+1).fill("")
+    Array<string>(initialGuess).fill("")
   );
   const [guessString, setGuessString] = useState<string>(initialString);
   // inital guesses müssen von difficulty reingegeben werden
@@ -28,6 +29,7 @@ export const GameView: FunctionComponent<{
   const [serverGuessInfo, setServerGuessInfo] = useState<number[]>([]);
   const [keysObject, setKeysObject] = useState<object>({});
   const [roundWon, setRoundWon] = useState<boolean>(false);
+  const [roundLost, setRoundLost] = useState<boolean>(false);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   // ----------------------
   // ----------------------
@@ -46,13 +48,18 @@ export const GameView: FunctionComponent<{
     } else {
       setModalOpen(true)
     }
-
-
   }, []);
 
   useEffect(() => {
     persistRound(guessesArray, checkArray, currentGuess, keysObject)
   }, [guessesArray, checkArray, currentGuess, keysObject])
+
+
+  useEffect(() => {
+    if (guessesArray.filter((guess) => guess !== "").length === initialGuess)
+      setRoundLost(true);
+
+  }, [guessesArray])
 
 
   const resetRound = () => {
@@ -102,7 +109,7 @@ export const GameView: FunctionComponent<{
   };
 
   const enterFunction = async () => {
-    if (guessString.length < initialGuess) {
+    if (guessString.length < initialGuess-1) {
       alert("Bitte 5 Buchstaben eingeben");
       return;
     }
@@ -141,8 +148,8 @@ export const GameView: FunctionComponent<{
 
     keyStatusFunc(guessesNew, checkNew);
 
-    // hier könnte man direkt ein objekt bauen und dieses an das keyboard objekt schicken
     setRoundWon(apiResponse.wordGuessed);
+
     if (apiResponse.wordGuessed) confettiFunc();
     // reset guess
     setGuessString("");
@@ -198,12 +205,12 @@ export const GameView: FunctionComponent<{
       <div className="flex justify-center items-center flex-grow mt-2">
         <Profile
           setGuessInfo={setServerGuessInfo}
-          currentRoundEnd={roundWon}
+          currentRoundEnd={roundWon || roundLost}
           // currentGuess={currentGuess}
           resetRound={resetRound}
         />
         <div>
-          {[...Array(totalGuesses + 1)].map((_, i) => {
+          {[...Array(totalGuesses)].map((_, i) => {
             return (
               <CharBoxRow
                 key={i}
@@ -214,7 +221,7 @@ export const GameView: FunctionComponent<{
                     : guessesArray[i]
                 }
                 checkArr={checkArray[i] && checkArray[i]}
-                boxCount={totalGuesses}
+                boxCount={totalGuesses-1}
               />
             );
           })}

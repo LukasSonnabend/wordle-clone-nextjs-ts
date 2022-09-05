@@ -1,18 +1,56 @@
 
 
-import React from 'react'; // we need this to make JSX compile
+import React, {useEffect} from 'react'; // we need this to make JSX compile
+import { clearTimeout } from 'timers';
 import {Key} from './Key';
 
 
-interface KeyBoardProps{ 
+interface KeyBoardProps{
   handleClick: (char: string) => void,
   keyStatus: object
 }
 
-//  TODO: 
-  //Checked keys müssen unten gesperrt bzw grün hinterlegt werden 
-  // Wäre nice wenn der delete button die gleiche breite hätte wie 
-export const KeyBoard = (Props: KeyBoardProps) => <div className='mt-2 h-full'>
+//  TODO:
+  //Checked keys müssen unten gesperrt bzw grün hinterlegt werden
+  // Wäre nice wenn der delete button die gleiche breite hätte wie
+export const KeyBoard = (Props: KeyBoardProps) => {
+
+  // keyboard listener prepared
+    // TODO: fix debounce
+  // function debounce(func, timeout = 300) {
+  //   let timer;
+  //   return(...args) => {
+  //     clearTimeout(timer)
+  //     timer = setTimeout(() => {func.apply(this, args); }, timeout);
+  //   }
+  // }
+
+  // const letterRegex = new RegExp('[a-zA-Z]')
+
+  // const processChange = (char: string) => debounce((char) => {console.log("hi"); Props.handleClick(char)})
+
+  // useEffect(() => {
+  //   document.addEventListener('keypress', (e: KeyboardEvent) => {
+  //     if (letterRegex.test(e.key)) {
+  //       let char: string = e.key.toUpperCase()
+  //       //console.log(e.key.toUpperCase)
+  //       processChange(char)
+  //       console.log(e.key)
+  //   } else if (e.key === 'Backspace') {
+  //     processChange('DELET')
+  //     console.log(e.key)
+  //   }
+
+  // })
+  // }, [])
+
+
+
+  // add eventlistener for keyboard
+
+
+return (
+<div className='mt-2 h-full'>
   {/* Row1 */}
   <div className='flex justify-end w-full gap-0.5 h-1/4 lg:gap-1'>
     <Key letter="Q" status={Props.keyStatus["Q"]} passToGame={Props.handleClick}/>
@@ -55,4 +93,5 @@ export const KeyBoard = (Props: KeyBoardProps) => <div className='mt-2 h-full'>
     <Key letter="M" status={Props.keyStatus["M"]} passToGame={Props.handleClick}/>
     <Key letter="DELET" className="min-w-12" passToGame={Props.handleClick}/>
   </div>
-</div>
+</div>)
+}
