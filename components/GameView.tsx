@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useEffect } from "react"; // we need this to make JSX compile
+import React, { FunctionComponent, useState, useEffect, useRef } from "react"; // we need this to make JSX compile
 import { CharBoxRow } from "./CharBoxRow";
 import { Profile } from "./Profile";
 import { KeyBoard } from "./KeyBoard";
@@ -34,6 +34,13 @@ export const GameView: FunctionComponent<{
   // ----------------------
   // ----------------------
   // ----------------------
+  const guessStringRef = useRef(guessString);
+
+  const setGuessStringRef = (data: string) => {
+    guessStringRef.current = data;
+    setGuessString(data);
+  };
+
 
   const totalGuesses = initialGuess;
 
@@ -63,7 +70,7 @@ export const GameView: FunctionComponent<{
 
 
   const resetRound = () => {
-    setGuessString("");
+    setGuessStringRef("")
     setGuessesArray(Array(totalGuesses).fill(""));
     setCurrentGuess(totalGuesses);
     setCheckArray(Array(totalGuesses).fill({ letterStatus: [] }));
@@ -152,17 +159,20 @@ export const GameView: FunctionComponent<{
 
     if (apiResponse.wordGuessed) confettiFunc();
     // reset guess
-    setGuessString("");
+    setGuessStringRef("");
     setCurrentGuess(currentGuess - 1);
   };
 
   // hier post auf api irgendwie muss das zu eratende wort gematcht werden
   const handleClick = async (char: String) => {
+    console.log(guessString.length)
     if (char === "DELET") {
-      setGuessString(guessString.slice(0, -1));
+      setGuessStringRef(guessString.slice(0, -1));
     } else if (char === "ENTER") {
       await enterFunction();
-    } else if (guessString.length < 5) setGuessString(`${guessString}${char}`);
+    } else if (guessStringRef.current.length < 5) {
+      setGuessStringRef(`${guessStringRef.current}${char}`)
+    };
   };
 
   const confettiFunc = () => {

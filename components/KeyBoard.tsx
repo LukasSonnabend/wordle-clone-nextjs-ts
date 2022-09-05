@@ -1,7 +1,6 @@
 
 
-import React, {useEffect} from 'react'; // we need this to make JSX compile
-import { clearTimeout } from 'timers';
+import React, {useEffect, useState, useRef} from 'react'; // we need this to make JSX compile
 import {Key} from './Key';
 
 
@@ -14,6 +13,40 @@ interface KeyBoardProps{
   //Checked keys müssen unten gesperrt bzw grün hinterlegt werden
   // Wäre nice wenn der delete button die gleiche breite hätte wie
 export const KeyBoard = (Props: KeyBoardProps) => {
+  const [input, setInput] = useState<string>('');
+  const myStateRef = useRef(input)
+  const setState = data => {
+    myStateRef.current = data
+    setInput(data)
+  }
+
+
+
+  const handleKeyboardInput = (e: KeyboardEvent) => {
+
+    const key = e.key
+    if (key.length === 1 && key.match(/[a-z]/i)) {
+      console.log(key.toLocaleUpperCase())
+      Props.handleClick(key.toLocaleUpperCase())
+      setState(myStateRef.current + key.toUpperCase())
+    } else if (key === "Backspace") {
+      Props.handleClick("DELET")
+      setState(input.slice(0, -1))
+    } else if (key === "Enter") {
+      Props.handleClick("ENTER")
+      // timeout 500
+
+      setState("")
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('keyup', handleKeyboardInput)
+    return() => {
+      document.removeEventListener('keyup',handleKeyboardInput)
+    }
+  }, [input])
+
 
   // keyboard listener prepared
     // TODO: fix debounce
