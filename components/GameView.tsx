@@ -116,16 +116,18 @@ export const GameView: FunctionComponent<{
   };
 
   const enterFunction = async () => {
-    if (guessString.length < initialGuess-1) {
+    console.log(guessStringRef.current.length < initialGuess-1)
+    if (guessStringRef.current.length < initialGuess-1) {
+
       alert("Bitte 5 Buchstaben eingeben");
       return;
     }
 
-    let apiResponse: GuessResponse = await postGuess(guessString);
+    let apiResponse: GuessResponse = await postGuess(guessStringRef.current);
     console.log(apiResponse);
 
     while(!apiResponse || !apiResponse.hasOwnProperty("validGuess"))
-      apiResponse = await postGuess(guessString);
+      apiResponse = await postGuess(guessStringRef.current);
 
     if (!apiResponse.validGuess) {
       alert("Dieses Wort existiert nicht");
@@ -135,7 +137,7 @@ export const GameView: FunctionComponent<{
     //save guess to guessArray
     const guessesNew = guessesArray.map((guess, index) => {
       if (index === totalGuesses - currentGuess) {
-        return guessString;
+        return guessStringRef.current;
       } else {
         return guess;
       }
@@ -165,10 +167,11 @@ export const GameView: FunctionComponent<{
 
   // hier post auf api irgendwie muss das zu eratende wort gematcht werden
   const handleClick = async (char: String) => {
-    console.log(guessString.length)
+
     if (char === "DELET") {
-      setGuessStringRef(guessString.slice(0, -1));
+      setGuessStringRef(guessStringRef.current.slice(0, -1));
     } else if (char === "ENTER") {
+      console.log(char)
       await enterFunction();
     } else if (guessStringRef.current.length < 5) {
       setGuessStringRef(`${guessStringRef.current}${char}`)
@@ -227,7 +230,7 @@ export const GameView: FunctionComponent<{
                 guessedRow={i < totalGuesses - currentGuess}
                 guess={
                   i == totalGuesses - currentGuess
-                    ? guessString
+                    ? guessStringRef.current
                     : guessesArray[i]
                 }
                 checkArr={checkArray[i] && checkArray[i]}
