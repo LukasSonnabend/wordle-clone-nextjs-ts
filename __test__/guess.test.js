@@ -83,4 +83,31 @@ describe('/api/v1/game/guess Tests', () => {
     );
   });
 
+  test('returns evaluation of guess correct-answer for trotz', async () => {
+    const { req, res } = createMocks({
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: {
+        guess: 'trost',
+        wordID: [19,54] // trotz
+      },
+    });
+
+    await handleGuess(req, res);
+
+    expect(res._getStatusCode()).toBe(200);
+    expect(JSON.parse(res._getData())).toEqual(
+      expect.objectContaining({
+        validGuess: true,
+        wordGuessed: false,
+        submittedGuess: 'trost',
+        evaluation: expect.objectContaining({
+          letterStatus: [3,3,3,1,2],
+        })
+      }),
+    );
+  });
+
 });

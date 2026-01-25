@@ -12,7 +12,7 @@ interface ExtendedNextApiRequest extends NextApiRequest {
 const allWordsObject: Record<string, String[]> = require('../../../../util/wordJson.json');
 
 const validateGuess = (guessString: string, wordID: number[]): number[] => {
-  const alphabet = "abcdefghijklmnopqrstuvwxz"
+  const alphabet = "abcdefghijklmnopqrstuvwxyz"
   const wordToGuess = allWordsObject[alphabet[wordID[0]]][wordID[1]]
   console.log(wordToGuess)
   // first match letters in correct position
@@ -29,7 +29,8 @@ const validateGuess = (guessString: string, wordID: number[]): number[] => {
 
   // then match letters in wrong position correct letters sind spaces
   for (let i = 0; i < guessStringArray.length; i++) {
-    if (guessStringArray[i] !== " " && word2GuessArray.includes(guessStringArray[i]) ){
+    // only mark as 'present but wrong place' when not already correct
+    if (validationArray[i] === 1 && word2GuessArray.includes(guessStringArray[i])) {
       validationArray[i] = 2;
       word2GuessArray[word2GuessArray.indexOf(guessStringArray[i])] = " "
     }
