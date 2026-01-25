@@ -7,7 +7,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Navbar() {
+export default function Navbar({ onSkip }: { onSkip?: () => void }) {
   return (
     <Disclosure as="nav" className="bg-gray-800 min-w-full">
       {({ open }) => (
@@ -56,6 +56,15 @@ export default function Navbar() {
                   <BellIcon className="h-6 w-6" aria-hidden="true" />
                 </button> */}
 
+                <div className="mr-2">
+                  <button
+                    type="button"
+                    onClick={() => onSkip && onSkip()}
+                    className="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded-md text-sm font-medium"
+                  >
+                    Skip
+                  </button>
+                </div>
                 {/* Profile dropdown */}
                 {/* <Menu as="div" className="ml-3 relative">
                   <div>

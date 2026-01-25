@@ -2,6 +2,7 @@ import React, { FunctionComponent, useState, useEffect, useRef } from "react"; /
 import { CharBoxRow } from "./CharBoxRow";
 import { Profile } from "./Profile";
 import { KeyBoard } from "./KeyBoard";
+import Navbar from "./navbar";
 import { guessCheck, GuessResponse, round } from "../types";
 import confetti from "canvas-confetti";
 import { loadRound, persistRound } from "../functions/gameaux";
@@ -24,7 +25,7 @@ export const GameView: FunctionComponent<{
   // inital guesses müssen von difficulty reingegeben werden
   const [currentGuess, setCurrentGuess] = useState<number>(initialGuess);
   const [checkArray, setCheckArray] = useState<guessCheck[]>(
-    Array(initialGuess+1).fill({ letterStatus: [] })
+    Array(initialGuess).fill({ letterStatus: [] })
   );
   const [serverGuessInfo, setServerGuessInfo] = useState<number[]>([]);
   const [keysObject, setKeysObject] = useState<object>({});
@@ -205,6 +206,7 @@ export const GameView: FunctionComponent<{
 
   return (
     <>
+      <Navbar onSkip={resetRound} />
       <span className="w-full text-right mt-2 pr-2">
       <button
       type="button"

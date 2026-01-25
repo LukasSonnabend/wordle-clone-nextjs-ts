@@ -11,6 +11,8 @@ export const Profile = ({setGuessInfo, resetRound, currentRoundEnd}: ProfileProp
   useEffect(() => {
     if (currentRoundEnd) {
       localStorage.removeItem("word");
+      // clear any persisted round so the next round starts fresh
+      localStorage.removeItem("round");
     }
 
     (async () => {
