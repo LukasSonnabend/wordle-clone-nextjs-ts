@@ -4,6 +4,7 @@ interface ProfileProps {
   setGuessInfo: (info: number[]) => void;
   resetRound: () => void;
   currentRoundEnd: boolean;
+  setLoading?: (val: boolean) => void;
 }
 
 export const Profile = ({setGuessInfo, resetRound, currentRoundEnd}: ProfileProps) => {
@@ -16,6 +17,7 @@ export const Profile = ({setGuessInfo, resetRound, currentRoundEnd}: ProfileProp
     }
 
     (async () => {
+      if (setLoading) setLoading(true);
       const loadStoredWord = () => {
         const raw = localStorage.getItem("word");
         if (!raw) return null;
@@ -46,23 +48,24 @@ export const Profile = ({setGuessInfo, resetRound, currentRoundEnd}: ProfileProp
         }
       }
 
-    })()
+      if (setLoading) setLoading(false);
 
-    if (currentRoundEnd){
-      console.log("round end")
-      if (localStorage.getItem("profile")) {
-        const profile = JSON.parse(localStorage.getItem("profile") || "{}");
-        profile.totalRounds++;
-        localStorage.setItem("profile", JSON.stringify(profile));
-      } else {
-        localStorage.setItem("profile", JSON.stringify({totalRounds: 1, firstDay: new Date().toLocaleDateString()}));
+      if (currentRoundEnd){
+        if (localStorage.getItem("profile")) {
+          const profile = JSON.parse(localStorage.getItem("profile") || "{}");
+          profile.totalRounds++;
+          localStorage.setItem("profile", JSON.stringify(profile));
+        } else {
+          localStorage.setItem("profile", JSON.stringify({totalRounds: 1, firstDay: new Date().toLocaleDateString()}));
+        }
+
+        const timer = setTimeout(() => {
+          resetRound();
+        }, 3000);
+        return () => clearTimeout(timer);
       }
 
-      const timer = setTimeout(() => {
-        resetRound();
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
+    })()
   }, [currentRoundEnd]);
 
   const getNewWord = async () => {

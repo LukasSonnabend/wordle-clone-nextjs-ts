@@ -32,6 +32,7 @@ export const GameView: FunctionComponent<{
   const [roundWon, setRoundWon] = useState<boolean>(false);
   const [roundLost, setRoundLost] = useState<boolean>(false);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [loadingNextRound, setLoadingNextRound] = useState<boolean>(false);
   // ----------------------
   // ----------------------
   // ----------------------
@@ -176,9 +177,10 @@ export const GameView: FunctionComponent<{
     setRoundWon(apiResponse.wordGuessed);
 
     if (apiResponse.wordGuessed) confettiFunc();
+    // move to next row then reset guess to avoid rendering an empty active row
+    setCurrentGuess((c) => c - 1);
     // reset guess
     setGuessStringRef("");
-    setCurrentGuess(currentGuess - 1);
   };
 
   // hier post auf api irgendwie muss das zu eratende wort gematcht werden
@@ -235,10 +237,16 @@ export const GameView: FunctionComponent<{
       <div className="flex justify-center items-center flex-grow mt-2">
         <Profile
           setGuessInfo={setServerGuessInfo}
+          setLoading={setLoadingNextRound}
           currentRoundEnd={roundWon || roundLost}
           // currentGuess={currentGuess}
           resetRound={resetRound}
         />
+        {loadingNextRound && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="bg-white text-black px-6 py-4 rounded">Lädt neues Wort…</div>
+          </div>
+        )}
         <div>
           {[...Array(totalGuesses)].map((_, i) => {
             return (
