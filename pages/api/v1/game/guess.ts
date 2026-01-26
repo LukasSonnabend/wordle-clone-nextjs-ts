@@ -43,17 +43,40 @@ export default function handleGuess(
   req: ExtendedNextApiRequest,
   res: NextApiResponse<GuessResponse>
 ) {
-  const userGuess = req.body.guess.toLowerCase()
+  const userGuess = (req.body && req.body.guess) ? String(req.body.guess).toLowerCase() : ""
 
-  let isRealWord
+  const wordID = req.body && req.body.wordID
+
+  // basic payload validation
+  if (!userGuess || !Array.isArray(wordID) || typeof wordID[0] !== 'number' || typeof wordID[1] !== 'number') {
+    return res.status(400).json({
+      submittedGuess: userGuess,
+      validGuess: false,
+      evaluation: { letterStatus: [] },
+      wordGuessed: false,
+    })
+  }
+
+  // verify the referenced word exists in our word list
+  const alphabet = "abcdefghijklmnopqrstuvwxyz"
+  const letterKey = alphabet[wordID[0]]
+  if (!letterKey || !allWordsObject[letterKey] || allWordsObject[letterKey][wordID[1]] === undefined) {
+    return res.status(400).json({
+      submittedGuess: userGuess,
+      validGuess: false,
+      evaluation: { letterStatus: [] },
+      wordGuessed: false,
+    })
+  }
+
+  let isRealWord = false
   try {
-    isRealWord = allWordsObject[userGuess[0]].includes(userGuess)
+    isRealWord = allWordsObject[userGuess[0]]?.includes(userGuess) || false
   } catch (error) {
     isRealWord = false
   }
 
-
-  const validationArray = validateGuess(userGuess, req.body.wordID)
+  const validationArray = validateGuess(userGuess, wordID)
 
   res.status(200).json({
     submittedGuess: userGuess,

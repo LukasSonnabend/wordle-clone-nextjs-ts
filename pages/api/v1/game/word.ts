@@ -16,7 +16,7 @@ interface ExtendedNextApiResponse extends NextApiResponse {
 const allWordsObject: Record<string, String[]> = require('../../../../util/wordJson.json'); 
 
 const randomWord = (): number[] => {
-  const alphabet = "abcdefghijklmnopqrstuvwxz"
+  const alphabet = "abcdefghijklmnopqrstuvwxyz"
   const randomLetter = alphabet[Math.floor(Math.random() * alphabet.length)]
   return [alphabet.indexOf(randomLetter), Math.floor(Math.random() * allWordsObject[randomLetter].length)]
 

@@ -124,6 +124,21 @@ export const GameView: FunctionComponent<{
       return;
     }
 
+    // ensure we have a valid wordID (try state first, then localStorage)
+    let effectiveWordID = serverGuessInfo;
+    if (!Array.isArray(effectiveWordID) || effectiveWordID.length !== 2 || typeof effectiveWordID[0] !== 'number') {
+      try {
+        const raw = localStorage.getItem('word');
+        const parsed = raw ? JSON.parse(raw) : null;
+        if (parsed && Array.isArray(parsed.guessWord)) effectiveWordID = parsed.guessWord;
+      } catch (e) {}
+    }
+
+    if (!Array.isArray(effectiveWordID) || effectiveWordID.length !== 2) {
+      alert('Zu erratendes Wort ist nicht geladen — bitte Seite neu laden.');
+      return;
+    }
+
     let apiResponse: GuessResponse = await postGuess(guessStringRef.current);
     console.log(apiResponse);
 
