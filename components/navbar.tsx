@@ -7,7 +7,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Navbar({ onSkip }: { onSkip?: () => void }) {
+export default function Navbar({ onSkip, onReset }: { onSkip?: () => void, onReset?: () => void }) {
   return (
     <Disclosure as="nav" className="bg-gray-800 min-w-full">
       {({ open }) => (
@@ -63,6 +63,15 @@ export default function Navbar({ onSkip }: { onSkip?: () => void }) {
                     className="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded-md text-sm font-medium"
                   >
                     Skip
+                  </button>
+                </div>
+                <div className="mr-2">
+                  <button
+                    type="button"
+                    onClick={() => onReset && onReset()}
+                    className="bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded-md text-sm font-medium"
+                  >
+                    Reset
                   </button>
                 </div>
                 {/* Profile dropdown */}

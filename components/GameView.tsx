@@ -80,6 +80,21 @@ export const GameView: FunctionComponent<{
     setKeysObject({});
   };
 
+  const fullReset = () => {
+    // show loading while new word is fetched by Profile
+    setLoadingNextRound(true);
+    // clear persisted data
+    try {
+      localStorage.removeItem('word');
+      localStorage.removeItem('round');
+      localStorage.removeItem('profile');
+    } catch (e) {}
+    // clear client state
+    setServerGuessInfo([]);
+    resetRound();
+    // Profile will fetch a new word and clear loading via setLoading
+  };
+
   const keyStatusFunc = (guesses: string[], check: guessCheck[]) => {
     const temp = keysObject;
     let currentGuessIndex = totalGuesses - currentGuess;
@@ -223,7 +238,7 @@ export const GameView: FunctionComponent<{
 
   return (
     <>
-      <Navbar onSkip={resetRound} />
+      <Navbar onSkip={resetRound} onReset={fullReset} />
       <span className="w-full text-right mt-2 pr-2">
       <button
       type="button"
