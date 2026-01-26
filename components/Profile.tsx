@@ -7,7 +7,7 @@ interface ProfileProps {
   setLoading?: (val: boolean) => void;
 }
 
-export const Profile = ({setGuessInfo, resetRound, currentRoundEnd}: ProfileProps) => {
+export const Profile = ({setGuessInfo, resetRound, currentRoundEnd, setLoading}: ProfileProps) => {
   // check if there is word in localStorage
   useEffect(() => {
     if (currentRoundEnd) {
